@@ -77,9 +77,13 @@ app.get('/profile',
 
 app.post('/register',
   function(req, res) {
-    const data = req.body.data;
-    console.log('p:::', decrypt(data));
-    res.end(decrypt(data))
+    const data = decrypt(req.body.data);
+    console.log('p__', data);
+    if (data) {
+      res.end('ok:' + data);
+    } else {
+      throw new Error('Broken');
+    }
   }
 );
 app.get('/logout', function (req, res) {
