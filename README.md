@@ -7,7 +7,7 @@ $ npm install
 ```
 
 Register [an app](https://profile.intra.42.fr/oauth/applications) on 42 intra
-and set the redirect URI to `http://localhost:3000/login/42/return`.
+and set the redirect URI to `http://localhost:4200/login/42/return`.
 
 Copy `.env.sample` to `.env` and edit CLIENT_ID and CLIENT_SECRET info.
 
@@ -18,7 +18,7 @@ $ npm run start
 ```
 
 Open a web browser and navigate to
-[http://localhost:3000/](http://localhost:3000/)
+[http://localhost:4200/](http://localhost:4200/)
 to see the example in action.
 
 ## 42 API List

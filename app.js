@@ -13,7 +13,7 @@ const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 passport.use(new FortyTwoStrategy({
   clientID: process.env.FORTYTWO_CLIENT_ID,
   clientSecret: process.env.FORTYTWO_CLIENT_SECRET,
-  callbackURL: 'http://localhost:3000/login/42/return'
+  callbackURL: process.env.RETURN_URL,
 },
   function (accessToken, refreshToken, profile, cb) {
     console.log('accessToken', accessToken, 'refreshToken', refreshToken);
