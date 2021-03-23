@@ -10,6 +10,9 @@ const passport = require('passport');
 const FortyTwoStrategy = require('passport-42').Strategy;
 const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 
+const getDataUrl = require('./util/qrcodeUtil');
+const { decrypt } = require('./util/cryptoUtil');
+
 passport.use(new FortyTwoStrategy({
   clientID: process.env.FORTYTWO_CLIENT_ID,
   clientSecret: process.env.FORTYTWO_CLIENT_SECRET,
@@ -17,11 +20,6 @@ passport.use(new FortyTwoStrategy({
 },
   function (accessToken, refreshToken, profile, cb) {
     console.log('accessToken', accessToken, 'refreshToken', refreshToken);
-    // In this example, the user's 42 profile is supplied as the user
-    // record.  In a production-quality application, the 42 profile should
-    // be associated with a user record in the application's database, which
-    // allows for account linking and authentication with other identity
-    // providers.
     return cb(null, profile);
   }));
 passport.serializeUser(function (user, cb) {
@@ -51,9 +49,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/', async function (req, res) {
-  let qrstring = Date.now() + '/' + ((req.user) ? req.user.username : '');
-  const QRCode = require('qrcode');
-  const url = await QRCode.toDataURL(qrstring);
+  const data = (req.user) ? req.user.username : '';
+  const url = await getDataUrl(data);
   res.render('home', { user: req.user, dataurl: url });
 });
 
@@ -74,12 +71,17 @@ app.get('/login/42/return',
 app.get('/profile',
   ensureLoggedIn(),
   async function (req, res) {
-    let qrstring = Date.now() + '/' + req.user.username;
-    const QRCode = require('qrcode');
-    const url = await QRCode.toDataURL(qrstring);
+    const url = await getDataURL(req.user.username);
     res.render('profile', { user: req.user, dataurl: url });
   });
 
+app.post('/register',
+  function(req, res) {
+    const data = decrypt(req.body.data);
+    console.log('p:::', decrypt(data));
+    res.end(decrypt(data))
+  }
+);
 app.get('/logout', function (req, res) {
   req.logout();
   res.redirect('/');
