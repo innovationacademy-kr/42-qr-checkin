@@ -77,7 +77,7 @@ app.get('/profile',
 
 app.post('/register',
   function(req, res) {
-    const data = decrypt(req.body.data);
+    const data = req.body.data;
     console.log('p:::', decrypt(data));
     res.end(decrypt(data))
   }
