@@ -71,12 +71,13 @@ app.get('/login/42/return',
 app.get('/profile',
   ensureLoggedIn(),
   async function (req, res) {
-    const url = await getDataURL(req.user.username);
+    const url = await getDataUrl(req.user.username);
     res.render('profile', { user: req.user, dataurl: url });
-  });
+  }
+);
 
 app.post('/register',
-  function(req, res) {
+  function (req, res) {
     const data = decrypt(req.body.data);
     console.log('p__', data);
     if (data) {
@@ -86,9 +87,14 @@ app.post('/register',
     }
   }
 );
+
 app.get('/logout', function (req, res) {
   req.logout();
   res.redirect('/');
+});
+
+app.get('/reader', function (req, res) {
+  res.render('reader');
 });
 
 // catch 404 and forward to error handler

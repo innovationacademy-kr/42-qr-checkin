@@ -2,13 +2,13 @@
 
 <head>
   <meta charset="utf-8">
-  <title>jsQR Demo</title>
+  <title>QR Reader</title>
   <script src="./jsQR.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Ropa+Sans" rel="stylesheet">
   <style>
     body {
+      background-image: url('/images/background42.jpg');
       font-family: 'Ropa Sans', sans-serif;
-      color: #333;
       max-width: 640px;
       margin: 0 auto;
       position: relative;
@@ -24,6 +24,11 @@
     h1 {
       margin: 10px 0;
       font-size: 40px;
+      text-shadow: 2px 2px 5px #fff;
+    }
+
+    .direction {
+      color: #ddd;
     }
 
     #loadingMessage {
@@ -56,7 +61,7 @@
 
 <body>
   <h1>Seoul 42 Cluster</h1>
-  <p>Scan your QR Code</p>
+  <p class="direction">Scan your QR Code</p>
   <div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
   <canvas id="canvas" hidden></canvas>
   <div id="output" hidden>

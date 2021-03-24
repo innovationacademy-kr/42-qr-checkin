@@ -1,10 +1,15 @@
 body {
+  max-width: 640px;
+  margin: 0 auto;
+  position: relative;
   padding: 30px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: 'Ropa Sans', sans-serif;
+  background-image: url('/images/background42.jpg');
+  color: #eee;
 }
 
 a {
-  color: #00B7FF;
+  color: #ffB7FF;
 }
 
 
