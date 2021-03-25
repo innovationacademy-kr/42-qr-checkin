@@ -48,7 +48,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/', async function (req, res) {
+app.get('/', ensureLoggedIn(), async function (req, res) {
   const data = (req.user) ? req.user.username : '';
   const url = await getDataUrl(data);
   res.render('home', { user: req.user, dataurl: url });
