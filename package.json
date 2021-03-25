@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/seoul42"
+    "start": "node ./bin/42seoul"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
