@@ -12,7 +12,6 @@ a {
   color: #ffB7FF;
 }
 
-
 .qrarea {
   text-align: center;
 }
@@ -20,4 +19,34 @@ a {
 .qrcode {
   width: 90%;
   max-width: 360px;
+}
+
+h1 {
+  margin: 10px 0;
+  font-size: 40px;
+  color: #333;
+  text-shadow: 2px 2px 5px #fff;
+}
+
+#loadingMessage {
+  text-align: center;
+  padding: 40px;
+  background-color: #eee;
+}
+
+#canvas {
+  width: 100%;
+}
+
+#output {
+  margin-top: 20px;
+  background: #eee;
+  color: #333;
+  padding: 10px;
+  padding-bottom: 0;
+}
+
+#output div {
+  padding-bottom: 10px;
+  word-wrap: break-word;
 }

@@ -5,68 +5,15 @@
   <title>QR Reader</title>
   <script src="./jsQR.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Ropa+Sans" rel="stylesheet">
-  <style>
-    body {
-      background-image: url('/images/background42.jpg');
-      font-family: 'Ropa Sans', sans-serif;
-      max-width: 640px;
-      margin: 0 auto;
-      position: relative;
-    }
-
-    #githubLink {
-      position: absolute;
-      right: 0;
-      top: 12px;
-      color: #2D99FF;
-    }
-
-    h1 {
-      margin: 10px 0;
-      font-size: 40px;
-      text-shadow: 2px 2px 5px #fff;
-    }
-
-    .direction {
-      color: #ddd;
-    }
-
-    #loadingMessage {
-      text-align: center;
-      padding: 40px;
-      background-color: #eee;
-    }
-
-    #canvas {
-      width: 100%;
-    }
-
-    #output {
-      margin-top: 20px;
-      background: #eee;
-      padding: 10px;
-      padding-bottom: 0;
-    }
-
-    #output div {
-      padding-bottom: 10px;
-      word-wrap: break-word;
-    }
-
-    #noQRFound {
-      text-align: center;
-    }
-  </style>
+  <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 
 <body>
   <h1>Seoul 42 Cluster</h1>
-  <p class="direction">Scan your QR Code</p>
   <div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
   <canvas id="canvas" hidden></canvas>
   <div id="output" hidden>
-    <div id="outputMessage">No QR code detected.</div>
-    <div hidden><b>Data:</b> <span id="outputData"></span></div>
+    <div id="outputMessage" class="direction">Scan your QR Code</div>
   </div>
   <script>
     var video = document.createElement("video");
@@ -75,7 +22,13 @@
     var loadingMessage = document.getElementById("loadingMessage");
     var outputContainer = document.getElementById("output");
     var outputMessage = document.getElementById("outputMessage");
-    var outputData = document.getElementById("outputData");
+
+    function drawSquare(location) {
+      drawLine(location.topLeftCorner, location.topRightCorner, "#FF3B58");
+      drawLine(location.topRightCorner, location.bottomRightCorner, "#FF3B58");
+      drawLine(location.bottomRightCorner, location.bottomLeftCorner, "#FF3B58");
+      drawLine(location.bottomLeftCorner, location.topLeftCorner, "#FF3B58");
+    }
 
     function drawLine(begin, end, color) {
       canvas.beginPath();
@@ -86,6 +39,22 @@
       canvas.stroke();
     }
 
+    function sendData(data) {
+      if (data) {
+        fetch('/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data })
+        })
+          .then(response => {
+            console.log(Date.now(), response);
+            console.log('ok:', response.results);
+          }).catch(err => {
+            console.log(err);
+          });
+      }
+    }
+
     // Use facingMode: environment to attemt to get the front camera on phones
     navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } }).then(function (stream) {
       video.srcObject = stream;
@@ -94,49 +63,41 @@
       requestAnimationFrame(tick);
     });
 
-    let scanned = 0;
+    let lastData = '';
+    let active = true;
+    let count = 0;
     function tick() {
       loadingMessage.innerText = "⌛ Loading video..."
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        loadingMessage.hidden = true;
-        canvasElement.hidden = false;
-        outputContainer.hidden = false;
-
         canvasElement.height = video.videoHeight;
         canvasElement.width = video.videoWidth;
         canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
         var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
         var code = jsQR(imageData.data, imageData.width, imageData.height);
-        if (code) {
-          if ((Date.now() - scanned) > 10000) {
-            scanned = Date.now();
-            drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
-            drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
-            drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
-            drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
-            outputMessage.hidden = true;
-            outputData.parentElement.hidden = false;
-            outputData.innerText = code.data;
-            if (code.data) {
-              fetch('/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ data: code.data })
-              })
-              .then(response => {
-                console.log(response);
-                console.log('ok:', response.results);
-              }).catch(err => {
-                console.log(err);
-              });
-            }
+
+        loadingMessage.hidden = true;
+        canvasElement.hidden = false;
+        outputContainer.hidden = false;
+        if (code && code.data) {
+          drawSquare(code.location);
+          outputMessage.innerText = code.data;
+          if (code.data !== lastData) {
+            lastData = code.data;
+            sendData(code.data);
           }
-        } else {
-          outputMessage.hidden = false;
-          outputData.parentElement.hidden = true;
         }
       }
       requestAnimationFrame(tick);
+      setInterval(() => {
+        outputMessage.innerText = 'Scan your QR Code';
+      }, 7000);
+    }
+    function sleep(timeMillis, callback) {
+      var stop = Date.now();
+      while (Date.now() < stop + timeMillis) {
+        // This is intentional
+      }
+      callback();
     }
   </script>
 </body>
