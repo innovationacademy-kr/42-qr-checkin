@@ -32,7 +32,13 @@ async function save(attend) {
     throw new Error('Already registered!');
   }
 };
+async function findAll() {
+  await sequelize.sync();
+  const result = await Attend.findAll({});
+  return result;
+}
 
 module.exports = {
-  save
+  save,
+  findAll
 };

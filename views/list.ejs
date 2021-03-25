@@ -1,0 +1,16 @@
+<%- include('./header.ejs') %>
+<h1>Registered</h1>
+<ul>
+  <%
+  options = {
+    year: 'numeric', month: 'numeric', day: 'numeric',
+    hour: 'numeric', minute: 'numeric', second: 'numeric',
+    hour12: false,
+    timeZone: 'Asia/Seoul'
+  };
+  const format = (date, locale) => new Intl.DateTimeFormat(locale, options).format(date);
+  list.forEach(row => { %>
+    <li><%= format(row.created, 'ko') %> <%= row.username %></li>
+  <% }) %>
+</ul>
+<%- include('./footer.ejs') %>

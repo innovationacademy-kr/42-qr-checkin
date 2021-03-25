@@ -114,6 +114,11 @@ app.get('/reader', function (req, res) {
   res.render('reader');
 });
 
+app.get('/Ilist', async function (req, res) {
+  const list = await Attend.findAll();
+  res.render('list', { list });
+});
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   const err = new Error('Not Found');

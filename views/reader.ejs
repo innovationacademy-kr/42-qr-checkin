@@ -82,6 +82,7 @@
         outputContainer.hidden = false;
         if (code && code.data) {
           drawSquare(code.location);
+          outputMessage.style = 'color: black';
           outputMessage.innerText = code.data;
           if (code.data !== lastData) {
             lastData = code.data;
