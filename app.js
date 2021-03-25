@@ -12,6 +12,7 @@ const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 
 const getDataUrl = require('./util/qrcodeUtil');
 const { decrypt } = require('./util/cryptoUtil');
+const Attend = require('./store.js');
 
 passport.use(new FortyTwoStrategy({
   clientID: process.env.FORTYTWO_CLIENT_ID,
@@ -77,13 +78,29 @@ app.get('/profile',
 );
 
 app.post('/register',
-  function (req, res) {
+  async function (req, res) {
     const data = decrypt(req.body.data);
     console.log('p__', data);
     if (data) {
-      res.end('ok:' + data);
+      const row = data.split('|');
+      if (row.length < 2) {
+        res.send({ success: false, message: 'Login Again!' });
+        return;
+      }
+      const record = {
+        event: process.env.EVENT_NAME || '202103os',
+        username: row[1],
+        created: new Date(Number(row[0]))
+      }
+      let result = {};
+      try {
+        result = await Attend.save(record);
+      } catch (err) {
+        result = { success: false, message: err.message };
+      }
+      res.end(JSON.stringify(result));
     } else {
-      throw new Error('Broken');
+      res.send({ success: false, message: 'Invalid Data.' });
     }
   }
 );

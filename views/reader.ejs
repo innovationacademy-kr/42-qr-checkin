@@ -39,19 +39,21 @@
       canvas.stroke();
     }
 
-    function sendData(data) {
+    async function sendData(data) {
       if (data) {
-        fetch('/register', {
+        const response = await fetch('/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ data })
-        })
-          .then(response => {
-            console.log(Date.now(), response);
-            console.log('ok:', response.results);
-          }).catch(err => {
-            console.log(err);
-          });
+        });
+        const result = await response.json();
+        if (result.success) {
+          outputMessage.style = 'color: black';
+          outputMessage.innerText = result.message;
+        } else {
+          outputMessage.style = 'color: red';
+          outputMessage.innerText = result.message;
+        }
       }
     }
 
@@ -66,7 +68,7 @@
     let lastData = '';
     let active = true;
     let count = 0;
-    function tick() {
+    async function tick() {
       loadingMessage.innerText = "⌛ Loading video..."
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
         canvasElement.height = video.videoHeight;
@@ -88,10 +90,11 @@
         }
       }
       requestAnimationFrame(tick);
-      setInterval(() => {
-        outputMessage.innerText = 'Scan your QR Code';
-      }, 7000);
     }
+    setInterval(() => {
+      outputMessage.style = 'color: black';
+      outputMessage.innerText = 'Scan your QR Code';
+    }, 7000);
     function sleep(timeMillis, callback) {
       var stop = Date.now();
       while (Date.now() < stop + timeMillis) {
