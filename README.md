@@ -1,8 +1,8 @@
 # Seoul42 Cadet
 
 ```bash
-$ git clone https://id@yona.okdevtv.com/kenu/seoul42-cadet
-$ cd 42oauth
+$ git clone https://github.com/innovationacademy-kr/42-qr-checkin
+$ cd 42-qr-checkin
 $ npm install
 ```
 
