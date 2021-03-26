@@ -6,20 +6,22 @@ $ cd 42-qr-checkin
 $ npm install
 ```
 
-Register [an app](https://profile.intra.42.fr/oauth/applications) on 42 intra
+* Register [an app](https://profile.intra.42.fr/oauth/applications) on 42 intra
 and set the redirect URI to `http://localhost:4200/login/42/return`.
 
-Copy `.env.sample` to `.env` and edit CLIENT_ID and CLIENT_SECRET info.
+* Copy `.env.sample` to `.env` and edit CLIENT_ID and CLIENT_SECRET info.
 
-Start the server.
+* Start the server.
 
 ```bash
 $ npm run start
 ```
 
-Open a web browser and navigate to
+* Open a web browser and navigate to
 [http://localhost:4200/](http://localhost:4200/)
 to see the example in action.
+
+<img src="./public/images/qr-checkin.png" style="width: 400px;">
 
 ## 42 API List
 * [API List](./docs/42api.md)
