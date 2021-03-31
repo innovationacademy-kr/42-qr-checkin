@@ -12,7 +12,7 @@ const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 
 const getDataUrl = require('./util/qrcodeUtil');
 const { decrypt } = require('./util/cryptoUtil');
-const Attend = require('./store.js');
+const Attend = require('./store/Attend.js');
 
 passport.use(new FortyTwoStrategy({
   clientID: process.env.FORTYTWO_CLIENT_ID,
